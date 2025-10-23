@@ -1,0 +1,31 @@
+services:
+  # Ana Uygulama
+  sync:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sync
+    environment:
+      # PostgreSQL veritabanı bağlantı bilgileri
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASS: ${POSTGRES_PASS}
+
+      # Oracle veritabanı bağlantı bilgileri
+      ORACLE_HOST: ${ORACLE_HOST:-}
+      ORACLE_PORT: ${ORACLE_PORT:-1521}
+      ORACLE_SERVICE_NAME: ${ORACLE_SERVICE_NAME:-}
+      ORACLE_USER: ${ORACLE_USER:-}
+      ORACLE_PASS: ${ORACLE_PASS:-}
+
+      LOG_FILE: ${LOG_FILE:-logs/scraper.log}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    restart: unless-stopped
+    command: ["/entrypoint.sh"]
+    stdin_open: true
+    tty: true
